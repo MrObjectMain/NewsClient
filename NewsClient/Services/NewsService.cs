@@ -23,7 +23,7 @@ namespace NewsClient.Services
             try
             {
                 ArticlesResult articlesResult = null;
-
+ 
                 using (var client = new HttpClient())
                 {
                     DateTime date = DateTime.Today.AddMonths(-1);
@@ -38,6 +38,7 @@ namespace NewsClient.Services
             }
             catch(Exception ex)
             {
+                TextLog.LogText($"{DateTime.Now} NewsService->GetNewsByQuery->Message: {ex.Message} \n StackTrace : /n {ex.StackTrace}");
                 return null;
             }
         }

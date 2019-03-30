@@ -97,20 +97,27 @@ namespace NewsClient.ViewModels
 
         private async void InitializeData()
         {
-            Ukraine = await _newsService.GetUkraineNews();
-            if (Ukraine.Count > 0)
+            try
             {
-                UkraineNewsVisibility = Visibility.Visible;
+                Ukraine = await _newsService.GetUkraineNews();
+                if (Ukraine.Count > 0)
+                {
+                    UkraineNewsVisibility = Visibility.Visible;
+                }
+                Poland = await _newsService.GetPolandNews();
+                if (Poland.Count > 0)
+                {
+                    PolandNewsVisibility = Visibility.Visible;
+                }
+                England = await _newsService.GetEnglandNews();
+                if (England.Count > 0)
+                {
+                    EnglandNewsVisibility = Visibility.Visible;
+                }
             }
-            Poland = await _newsService.GetPolandNews();
-            if (Poland.Count > 0)
+            catch (Exception ex)
             {
-                PolandNewsVisibility = Visibility.Visible;
-            }
-            England = await _newsService.GetEnglandNews();
-            if (England.Count > 0)
-            {
-                EnglandNewsVisibility = Visibility.Visible;
+                TextLog.LogText($"{DateTime.Now} NewsViewModel->InitializeData->Message: {ex.Message}  StackTrace :  {ex.StackTrace}");
             }
         }
     }
