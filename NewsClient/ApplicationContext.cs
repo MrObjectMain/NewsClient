@@ -20,7 +20,7 @@ namespace NewsClient
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=_NEWS_CLIENT;Trusted_Connection=True;MultipleActiveResultSets=true");
+            optionsBuilder.UseSqlite(@"Filename=_NEWS_CLIENT");
         }
     }
 }
