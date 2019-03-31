@@ -1,6 +1,7 @@
 ﻿using NewsAPI;
 using NewsAPI.Constants;
 using NewsAPI.Models;
+using NewsClient.UnitOfWorks;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,8 @@ namespace NewsClient.Services
     {
         private readonly string _apiNewsKey = "17e4f139baae40be981076543ab4297c";
         private readonly string _queryTemplate = "https://newsapi.org/v2/everything?q={0}&from={1}-{2}-{3}&sortBy=publishedAt&apiKey=17e4f139baae40be981076543ab4297c";
+        private readonly DatabaseService _databaseService = new DatabaseService(new UnitOfWork(new ApplicationContext()));
+        private readonly FileService _fileService = new FileService();
 
         public async Task<ObservableCollection<Article>> GetNewsByQuery(string query)
         {
@@ -31,7 +34,10 @@ namespace NewsClient.Services
                     articlesResult = JsonConvert.DeserializeObject<ArticlesResult>(jsonString);
                     if (articlesResult != null)
                     {
-                        return new ObservableCollection<Article>(articlesResult.Articles.Take(3));
+                        var result = new ObservableCollection<Article>(articlesResult.Articles.Take(3));
+                        await _databaseService.Create(result);
+                        await _fileService.Create(result);
+                        return result;
                     }
                     return null;
                 }
